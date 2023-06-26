@@ -1,0 +1,339 @@
+LAB 1:----->
+
+
+//1. addition of 2 16-bit number using immidiate addressing mode
+
+MOV AX,1000H
+MOV BX.2000H
+ADD AX,BX
+HLT
+
+
+//Substraction of two 16bit numbers using direct addressing mode
+
+MOV BX,2300H
+SUB BX,[1400H]
+MOV AX,BX
+MOV [3300],AX
+HLT
+
+
+//addition of 2 16bit numbe using indirect addressing mode
+
+MOV AX,3000H
+MOV DS,AX
+MOV SI,0500H
+MOV AX,[SI]
+INC SI
+INC SI
+MOV BX,[SI]
+ADD AX,BX
+INC SI
+INC SI
+MOV [SI],AX
+HLT
+
+
+//subsctration of 2 16 bit number using index addressing mode
+
+MOV AX,1000H
+MOV DS,AX
+MOV SI,2500H
+MOV AX,[SI+00H]
+MOV BX,[SI+02H]
+SUB AX,BX
+MOV [SI+04H],AX
+HLT
+
+
+//addition of 2 16bit numbe rusing base index addressing mode
+
+MOV AX,1000H
+MOV DS,AX
+MOV BX,2000H
+MOV SI,0500H
+MOV CX,[BX+SI]
+MOV DX,[BX+SI+02H]
+MOV AX,CX
+ADD [BX+SI+04H],AX
+HLT
+
+
+// multiplication of 2 16bit numbers using base index addressing mode
+
+mov bx,[1000h] ;bx= multiplicand
+mov cx,[1002h] ;cx= multiplier
+mov ax,0000h
+loop: add ax,bx
+dec cx
+jnz loop
+mov [1004h],ax
+hlt
+
+
+//division of 2 16bit number without using div instruction
+
+mov ax,[1000h] ;ax =dividend
+mov bx,[1002h] ;ax=divisor
+mov cx,000h
+l1: cmp ax,bx
+jc l2
+sub ax,bx
+inc cx
+jmp l1
+l2: mov [1004h],cx
+mov [1006h],ax
+hlt
+
+//LAB 2: ----->
+
+//find the 2's complement of an 8bit number
+
+mov al, [1000h]  
+neg al           ; Negate (invert) the bits of AL
+inc al 
+hlt
+
+
+//find the gray code of an 8bit number
+
+mov si,2000h
+mov al,[si]
+mov cl,08h
+mov bl,00h
+l1: ror al,01h
+jnc l2
+inc bl
+l2: dec cl
+jnz l1
+inc si
+mov [si],bl
+hlt
+
+
+//LAB 3:-------->
+
+//find the sum and average of N 16 bit numbers.
+mov AX,1000H
+MOV DS,AX
+MOV SI,5000H
+MOPV CL,[SI]
+MOV BL,CL
+MOV AX,0000H
+MOV DX,0000H
+L2:INC SI
+   INC SI
+   ADD AX,[SI]
+   INC L1
+   ADD DX
+L1:DEC CL
+   INZ L2
+   INC SI
+   INC SI
+   MOV[SI],AX
+   INC SI
+   INC SI
+   MOV[SI],DX
+DIV BX
+INC SI
+INC SI
+MOV[SI],AX
+INC SI
+INC SI
+MOV[SI],DX
+HLT
+
+
+//count no of 1's in 8 bit number
+MOV AL,[SI]
+MOV CL,08H
+MOV BL,00H
+
+LOOP1:ROR AL,01H
+      JNC LOOP2
+      INC BL
+LOOP2:DEC CL
+     JNZ LOOP1
+     INC SI
+     MOV[SI],BL
+     
+     HLT
+     
+     
+//move a block Q 16 bit data from one location to other
+MOV AX,1000H
+MOV DS,AX
+MOV SI,2000H
+MOV DI,5002H
+MOV CL,[SI]
+L1:INC SI
+INC SI
+MOV AX,[SI]
+MOV [DI],AX
+INC DI
+INC DI
+DEC CL
+INZ L1
+HLT
+
+
+//LAB 4:----->
+
+//find the largest and samllest no in each array of size N
+//largest no.
+.DATA
+COUNT DB 04H
+ARRAY DB O9H,10H,05H,03H
+RES DB 0
+.CODE
+MAIN PROG
+MOV AX,DATA
+MOV  DS,AX
+MOV CL,COUNT
+DEC CL
+LEA SI,ARRAY
+MOV AL,[SI]
+UP:INC SI
+CMP AL,[SI]
+JNC DOWN
+MOV AL,[SI]
+DOWN;DEL CL
+INZ UP
+LEA DZ,RES
+MOV [DZ],AL
+END MAIN
+
+//smallest no
+.DATA
+COUNT DB 04H
+ARRAY DB O9H,10H,05H,03H
+RES DB 0
+.CODE
+MAIN PROG
+MOV AX,DATA
+MOV  DS,AX
+MOV CL,COUNT
+DEC CL
+LEA SI,ARRAY
+MOV AL,[SI]
+UP:INC SI
+CMP AL,[SI]
+JNC DOWN
+MOV AL,[SI]
+DOWN;DEL CL
+INZ UP
+LEA DI,RES
+MOV[DI],AL
+END MAIN
+
+
+//arrange the elements of a given array of size N in ascending and descending order
+//ascending order
+.DATA
+COUNT DB 06H
+VALUE DB 09H,0FH,14H,45H,24H,3FH
+.CODE
+MAIN PROG
+MOV AX,DATA
+MOV DS,AX
+LEA DI,COUNT
+MOV CH,[DI]
+DEC CH
+UP2:MOV CL,CH
+LEA SI,VALUE
+UP1:MOV AL,[SI]
+CMP AL,[SI+1]
+JC DOWN
+MOV DL,[SI+1]
+XCHG[SI],DL
+MOV[SI+1],DL
+DOWN:INC SI
+DEC CL
+JNZ UP1
+DEC CH
+INZ UP2
+END MAIN
+
+//descending order.DATA
+COUNT DB 06H
+VALUE DB 09H,0FH,14H,45H,24H,3FH
+.CODE
+MAIN PROG
+MOV AX,DATA
+MOV DS,AX
+LEA DI,COUNT
+MOV CH,[DI]
+DEC CH
+UP2:MOV CL,CH
+LEA SI,VALUE
+UP1:MOV AL,[SI]
+CMP AL,[SI+1]
+INC DOWN
+MOV DL,[SI+1]
+XCHG[SI],DL
+MOV[SI+1],DL
+DOWN:INC SI
+DEC CL
+JNZ UP1
+DEC CH
+INZ UP2
+END MAIN
+
+
+//LAB 5:--------->
+
+//adittion of two 32bit numbers using load/store adresssing mode
+.global _start
+_start:
+ldr r0,=list
+ldr r1,[r0],#4
+ldr r2,[r0],#4
+add r3, r2, r1
+mov r7,#1
+swi 0
+.data
+list:
+.word 2,3,4
+
+
+//substraction of  two 32bit numbers using load/store adresssing mode
+.gl0bal_start
+_start:
+ldr ro,=list
+ldr r1,[r0],#4
+ldr r2,[r0],#4
+subs r3,r2,r1
+mov r7,#1
+swi 0
+.data
+list: 
+.word 2,3,4
+
+
+//multiplication  two 32bit numbers using load/store adresssing mode
+global_start
+_start:
+ldr r0,=list
+ldr r1,[r0],#4
+ldr r2,[r0],#4
+mul r3,r1,r2
+mov r7,#1
+swi 0
+.data
+list:
+.worxd 2,3,4
+
+
+//perform the logical operation(AND,OR,XOR and NOT) on 32 bit numbersusing load/store adressing mode
+.global_start
+_start:
+mov r0,#0x23
+mov r1,#0x53
+mov r2,r0,r1
+orr r3,r0,r1
+eor r4,r0,r1
+mvn r5,r0
+mov r7,#1
+swi0
+
+
